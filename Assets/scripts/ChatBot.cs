@@ -7,4 +7,10 @@ public class ChatBot : MonoBehaviour {
 
     [SerializeField]
     ChatItem Current;
+
+    [SerializeField]
+    PsychologyProfile playerProfile;
+
+    [SerializeField]
+    PsychologyProfile npcProfile;
 }
