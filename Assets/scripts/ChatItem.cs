@@ -2,7 +2,7 @@
 using System.Collections;
 
 public enum Actor {Player, NPC };
-public enum SocialDimension {Neutral, Maturity};
+public enum SocialDimension {Neutral, Maturity, Eagerness};
 public enum IndexDirection {Next, Previos};
 
 [CreateAssetMenu(fileName = "ChatItem", menuName = "Chat Item", order = 1)]
@@ -18,6 +18,8 @@ public class ChatItem : ScriptableObject {
     public ChatItem[] nextChatItem;
 
     int index = 0;
+
+    public bool singleNextChat = true;
 
     public bool HasOptions()
     {
@@ -60,50 +62,20 @@ public class ChatItem : ScriptableObject {
         }
     }
 
-    public bool MoveIndex(IndexDirection direction)
-    {
-        if (direction == IndexDirection.Next)
-        {
-            if (index < OptionList.Length - 2)
-            {
-                index++;
-                return true;
-            } else
-            {
-                return false;
-            }
-        } else
-        {
-            if (index > 0)
-            {
-                index--;
-                return true;
-            } else
-            {
-                return false;
-            }
-        }
-    }
-
     int GetOptionBasedOnSocialValueIndex(float value)
     {
         int lowerBound = -1;
         int upperBound = -1;
         for (int i = 0; i < values.Length; i++)
         {
-            if (upperBound == -1 && value < values[i])
+            if (value < values[i] && (upperBound == -1 || values[upperBound] > values[i]))
             {
                 upperBound = i;
             }
-            if (lowerBound == -1 && values[i] > value)
+            else if (value > values[i] && (lowerBound == -1 || values[lowerBound] < values[i]))
             {
-                lowerBound = i - 1;
+                lowerBound = i;
             }
-        }
-
-        if (lowerBound < 0 && values[values.Length - 1] < value)
-        {
-            lowerBound = values.Length - 1;
         }
 
         if (upperBound < 0)
@@ -113,15 +85,51 @@ public class ChatItem : ScriptableObject {
         else if (lowerBound < 0)
         {
             return upperBound;
-        } else
+        }
+        else
         {
             return Random.Range(values[lowerBound], values[upperBound]) > value ? upperBound : lowerBound;
         }
     }
 
+    public bool MoveIndex(IndexDirection direction)
+    {
+        if (direction == IndexDirection.Next)
+        {
+            if (index < OptionList.Length - 2)
+            {
+                index++;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (index > 0)
+            {
+                index--;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
     public ChatItem NextChatItem()
     {
-        if (nextChatItem.Length > index)
+        if (singleNextChat)
+        {
+            if (nextChatItem.Length > 0)
+            {
+                return nextChatItem[0];
+            }
+        }
+        else if (nextChatItem.Length > index)
         {
             return nextChatItem[index];
         }
