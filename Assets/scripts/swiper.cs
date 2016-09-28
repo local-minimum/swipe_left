@@ -9,7 +9,8 @@ public class swiper : MonoBehaviour {
        
     Animator anim;
 
-    string triggerLiking = "Liking";
+    string triggerVoting = "Voting";
+    string triggerAbortVoting = "AbortVote";
     string triggerLikeLevel = "Like";
 
     float likeLevel = 0.5f;
@@ -23,6 +24,9 @@ public class swiper : MonoBehaviour {
     [SerializeField, Range(0.9f, 2f)]
     float acceptWithoutRelease = 1.1f;
 
+    [SerializeField]
+    bool swipeEnabled = false;
+
     void Start()
     {
         Input.simulateMouseWithTouches = true;
@@ -31,28 +35,38 @@ public class swiper : MonoBehaviour {
 
     void Update()
     {
-        if (hovering && !swiping)
+        if (swipeEnabled)
         {
-            swiping = Input.GetMouseButtonDown(0);
-            if (swiping)
+
+            if (hovering && !swiping)
             {
-                Cursor.visible = false;
+                swiping = Input.GetMouseButtonDown(0);
+                if (swiping)
+                {
+                    Cursor.visible = false;
+                }
             }
-        } else if (swiping && Input.GetMouseButtonUp(0))
-        {
-            float scaledLikeLevel = GetScaledLikeLevel();
-            if (Mathf.Abs(scaledLikeLevel) > acceptThreshold)
+            else if (swiping && Input.GetMouseButtonUp(0))
             {
-                TriggerLiking(scaledLikeLevel > 0);
-            }
-            EndSwipe();
-        } else if (swiping)
-        {
-            float scaledLikeLevel = GetScaledLikeLevel();
-            if (Mathf.Abs(scaledLikeLevel) > acceptWithoutRelease)
-            {
-                TriggerLiking(scaledLikeLevel > 0);
+                float scaledLikeLevel = GetScaledLikeLevel();
+                if (Mathf.Abs(scaledLikeLevel) > acceptThreshold)
+                {
+                    TriggerLiking(scaledLikeLevel > 0);
+                }
+                else
+                {
+                    anim.SetTrigger(triggerAbortVoting);
+                }
                 EndSwipe();
+            }
+            else if (swiping)
+            {
+                float scaledLikeLevel = GetScaledLikeLevel();
+                if (Mathf.Abs(scaledLikeLevel) > acceptWithoutRelease)
+                {
+                    TriggerLiking(scaledLikeLevel > 0);
+                    EndSwipe();
+                }
             }
         }
     }
@@ -64,8 +78,7 @@ public class swiper : MonoBehaviour {
 
     void EndSwipe()
     {
-        hovering = false;
-        anim.SetBool(triggerLiking, false);        
+        hovering = false;        
         likeLevel = 0.5f;
         anim.SetFloat(triggerLikeLevel, likeLevel);
         swiping = false;
@@ -75,7 +88,7 @@ public class swiper : MonoBehaviour {
 
     void LateUpdate()
     {
-        if (swiping)
+        if (swipeEnabled && swiping)
         {
             
             float mouseFraction = Input.mousePosition.x / Screen.width;
@@ -105,20 +118,21 @@ public class swiper : MonoBehaviour {
 
     public void MouseOver()
     {
-        if (!swiping)
+        if (swipeEnabled && !swiping)
         {
             likeLevel = 0.5f;
             anim.SetFloat(triggerLikeLevel, likeLevel);
-            anim.SetBool(triggerLiking, true);
+            anim.ResetTrigger(triggerAbortVoting);
+            anim.SetTrigger(triggerVoting);
             hovering = true;            
         }
     }
 
     public void MouseExit()
     {
-        if (!swiping)
+        if (swipeEnabled && !swiping)
         {
-            anim.SetBool(triggerLiking, false);
+            anim.SetTrigger(triggerAbortVoting);
             hovering = false;
         }
     }
