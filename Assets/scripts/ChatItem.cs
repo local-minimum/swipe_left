@@ -57,6 +57,7 @@ public class ChatItem : ScriptableObject {
             return OptionList[index];
         }
     }
+
     public string GetOptionBasedOnSocialValue(float value)
     {
         index = GetOptionBasedOnSocialValueIndex(value);
@@ -125,6 +126,10 @@ public class ChatItem : ScriptableObject {
                 return false;
             }
         }
+    }
+    public void SetIndex(int idx)
+    {
+        index = Mathf.Clamp(idx, 0, OptionList.Length - 1);        
     }
 
     public ChatItem NextChatItem()

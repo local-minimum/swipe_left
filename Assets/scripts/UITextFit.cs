@@ -6,6 +6,8 @@ public class UITextFit : MonoBehaviour {
     [SerializeField]
     float overshoot = 10;
 
+    int index = -1;
+
     void Reset()
     {
         UpdateSize();
@@ -25,10 +27,24 @@ public class UITextFit : MonoBehaviour {
         lElem.minHeight = overshoot + padding +  innerHeight / anchorHeight;
 	}
 	
+    public void SetText(int idx, string txt)
+    {
+        index = idx;
+        SetText(txt);
+    }
+
     public void SetText(string txt)
     {
         Text text = GetComponentInChildren<Text>();
         text.text = txt;
         UpdateSize();
+    }
+
+    public int Index
+    {
+        get
+        {
+            return index;
+        }
     }
 }
