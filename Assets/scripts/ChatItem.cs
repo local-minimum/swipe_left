@@ -50,6 +50,13 @@ public class ChatItem : ScriptableObject {
         }
     }
 
+    public string SelectedOption
+    {
+        get
+        {            
+            return OptionList[index];
+        }
+    }
     public string GetOptionBasedOnSocialValue(float value)
     {
         index = GetOptionBasedOnSocialValueIndex(value);
