@@ -94,7 +94,7 @@ public class swiper : MonoBehaviour {
             float mouseFraction = Input.mousePosition.x / Screen.width;
             float anchorX = Mathf.Clamp(mouseFraction, 0.5f - swipeRange, 0.5f + swipeRange);
             
-            likeLevel = (mouseFraction - (0.5f - swipeRange)) / (2f * swipeRange);
+            likeLevel = ((1 - mouseFraction) - (0.5f - swipeRange)) / (2f * swipeRange);
             anim.SetFloat(triggerLikeLevel, likeLevel);
             SetDragMarker(anchorX);
         }
