@@ -35,11 +35,20 @@ public class ChatBot : MonoBehaviour {
     [SerializeField]
     RectTransform optionsRect;
 
+    [SerializeField, Range(0, 10)]
+    float minDelayNext = 1f;
+
+    [SerializeField,Range(0, 10)]
+    float maxDelayNext = 2f;
+
+    [SerializeField, Range(0, 1)]
+    float nextPollP = 0.1f;
+
     bool nextItem = true;
 
     void Update()
     {
-        if (nextItem && Random.value < 0.1f)
+        if (nextItem && Random.value < nextPollP)
         {
             nextItem = false;
             if (Current.actor == Actor.NPC)
@@ -55,12 +64,12 @@ public class ChatBot : MonoBehaviour {
 
     IEnumerator<WaitForSeconds> theyChat()
     {
-        yield return new WaitForSeconds(Random.Range(0.5f, 3f));
+        yield return new WaitForSeconds(Random.Range(minDelayNext, maxDelayNext));
         UITextFit utf = Instantiate(themUIPrefab);
         utf.SetText(Current.SelectedOption);
         utf.transform.SetParent(chatRect);
 
-        yield return new WaitForSeconds(Random.Range(1f, 4f));
+        yield return new WaitForSeconds(Random.Range(minDelayNext, maxDelayNext));
         Current = Current.NextChatItem();
         nextItem = Current != null;
     }
@@ -68,9 +77,8 @@ public class ChatBot : MonoBehaviour {
     void weChat()
     {
         UITextFit utf = Instantiate(weUIPrefab);
-        utf.SetText(Current.SelectedOption);
         utf.transform.SetParent(chatRect);
-
+        utf.SetText(Current.SelectedOption);            
     }
 
     void showOptions()
@@ -81,7 +89,11 @@ public class ChatBot : MonoBehaviour {
             if (i < optionsRect.childCount)
             {
                 GameObject child = optionsRect.GetChild(i).gameObject;
-                child.SetActive(true);
+                if (!child.activeSelf)
+                {
+                    child.SetActive(true);
+                    child.GetComponent<UIButtonish>().OnClickAction += ChatBot_OnClickAction;
+                }
                 utf = child.GetComponent<UITextFit>();
             }
             else {
@@ -98,7 +110,6 @@ public class ChatBot : MonoBehaviour {
         {
             GameObject child = optionsRect.GetChild(i).gameObject;
             child.GetComponent<UIButtonish>().OnClickAction -= ChatBot_OnClickAction;
-
             child.SetActive(false);
 
         }
@@ -107,7 +118,6 @@ public class ChatBot : MonoBehaviour {
 
     private void ChatBot_OnClickAction(UIButtonish btn)
     {
-        btn.OnClickAction -= ChatBot_OnClickAction;
 
         chatAnimator.SetTrigger(triggerHideOptions);
         Current.SetIndex(btn.GetComponent<UITextFit>().Index);
@@ -122,7 +132,7 @@ public class ChatBot : MonoBehaviour {
 
     IEnumerator<WaitForSeconds> DelayNext()
     {
-        yield return new WaitForSeconds(Random.Range(1f, 4f));
+        yield return new WaitForSeconds(Random.Range(minDelayNext, maxDelayNext));
         nextItem = true;
     }
 }

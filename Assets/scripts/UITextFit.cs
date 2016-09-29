@@ -17,6 +17,11 @@ public class UITextFit : MonoBehaviour {
         UpdateSize();
     }
 
+    void Update()
+    {
+        UpdateSize();
+    }
+
     void UpdateSize() { 
         Text text = GetComponentInChildren<Text>();
         LayoutElement lElem = GetComponent<LayoutElement>();
@@ -25,6 +30,7 @@ public class UITextFit : MonoBehaviour {
         float padding = text.rectTransform.offsetMin.y + text.rectTransform.offsetMax.y;
         float anchorHeight = text.rectTransform.anchorMax.y - text.rectTransform.anchorMin.y;
         lElem.minHeight = overshoot + padding +  innerHeight / anchorHeight;
+        //Debug.Log(overshoot + padding + innerHeight / anchorHeight);
 	}
 	
     public void SetText(int idx, string txt)
@@ -36,7 +42,7 @@ public class UITextFit : MonoBehaviour {
     public void SetText(string txt)
     {
         Text text = GetComponentInChildren<Text>();
-        text.text = txt;
+        text.text = txt;        
         UpdateSize();
     }
 
