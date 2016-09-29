@@ -52,6 +52,7 @@ public class UIButtonish : MonoBehaviour {
     {
         if (stage == ButtonStages.Pressed && pointerIsOver)
         {
+            Debug.Log("On Release");
             stage = ButtonStages.Passive;
             anim.SetTrigger(ExitTrigger);
             if (OnClickAction != null)
@@ -65,16 +66,4 @@ public class UIButtonish : MonoBehaviour {
         }
     }
 
-    public void Click()
-    {
-        if (stage == ButtonStages.Hover)
-        {
-            stage = ButtonStages.Passive;
-            anim.SetTrigger(ExitTrigger);
-            if (OnClickAction != null)
-            {
-                OnClickAction(this);
-            }
-        }
-    }
 }
