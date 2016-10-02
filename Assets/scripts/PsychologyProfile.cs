@@ -139,9 +139,11 @@ public class PsychologyProfile : ScriptableObject {
         Debug.Log(string.Format("{0} : {1} -> {2}", GetValue(dimension), othersValue, Mathf.Pow(delta, 2f/3f)));
         if (Random.value > Mathf.Pow(delta, 2f/3f))
         {
-            return (1 - interest) * Random.value + interest; 
+            Debug.Log("Interest increase");
+            return Mathf.Clamp01(interest * (1.05f + Random.value / 3f)); 
         } else
         {
+            Debug.Log("Interest decrease");
             return interest / 1.5f * Random.value;
         }
     }
