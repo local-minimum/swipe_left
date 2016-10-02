@@ -127,9 +127,18 @@ public class ChatItem : ScriptableObject {
             }
         }
     }
+
     public void SetIndex(int idx)
     {
         index = Mathf.Clamp(idx, 0, OptionList.Length - 1);        
+    }
+
+    public float SelectedValue
+    {
+        get
+        {
+            return values[index];
+        }
     }
 
     public ChatItem NextChatItem()

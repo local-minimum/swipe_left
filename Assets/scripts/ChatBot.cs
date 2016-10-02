@@ -68,6 +68,7 @@ public class ChatBot : MonoBehaviour {
         UITextFit utf = Instantiate(themUIPrefab);
         float npcSocialValue = npcProfile.GetValue(Current.social);
         string txt = Current.GetOptionBasedOnSocialValue(npcSocialValue);
+        npcProfile.UpdateValue(Current.social, Current.SelectedValue);
         utf.SetText(txt);
         utf.transform.SetParent(chatRect);
 
