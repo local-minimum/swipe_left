@@ -10,7 +10,15 @@ public class PsychologyProfile : ScriptableObject {
     [SerializeField, Range(0, 1)]
     float maleability = 0.3f;
 
+    [SerializeField, Range(0, 1)]
+    float leaveChatThrehold = 0.1f;
+
+    [Range(0, 1)]
+    public float interest = 0.5f;
+
     List<ChatItem> history = new List<ChatItem>();
+    
+    public ChatItem abandonMessage;
 
     public bool isSocial
     {
@@ -116,5 +124,30 @@ public class PsychologyProfile : ScriptableObject {
     int GetDimensionIndex(SocialDimension dimension)
     {
         return (int)dimension - 1;
+    }
+
+    public bool UpdateInterestAndGetStayInChat(SocialDimension dimension, float othersValue)
+    {
+        float deltaInterest = GetInterestDelta(dimension, othersValue);
+        UpdateInterest(deltaInterest);
+        return interest > leaveChatThrehold;
+    }
+
+    float GetInterestDelta(SocialDimension dimension, float othersValue)
+    {
+        float delta = Mathf.Min(1, Mathf.Abs(GetValue(dimension) - othersValue) * 1.2f);
+        Debug.Log(string.Format("{0} : {1} -> {2}", GetValue(dimension), othersValue, Mathf.Pow(delta, 2f/3f)));
+        if (Random.value > Mathf.Pow(delta, 2f/3f))
+        {
+            return (1 - interest) * Random.value + interest; 
+        } else
+        {
+            return interest / 1.5f * Random.value;
+        }
+    }
+
+    void UpdateInterest(float value)
+    {
+        interest = (interest + value) / 2f;
     }
 }

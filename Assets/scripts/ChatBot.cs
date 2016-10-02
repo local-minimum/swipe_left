@@ -65,16 +65,13 @@ public class ChatBot : MonoBehaviour {
     IEnumerator<WaitForSeconds> theyChat()
     {
         yield return new WaitForSeconds(Random.Range(minDelayNext, maxDelayNext));
-        UITextFit utf = Instantiate(themUIPrefab);
         float npcSocialValue = npcProfile.GetValue(Current.social);
         string txt = Current.GetOptionBasedOnSocialValue(npcSocialValue);
         if (Current.social != SocialDimension.Neutral)
         {
             npcProfile.UpdateValue(Current.social, Current.SelectedValue);
         }
-        utf.SetText(txt);
-        utf.transform.SetParent(chatRect);
-
+        theyChatItem(txt);
         yield return new WaitForSeconds(Random.Range(minDelayNext, maxDelayNext));
 
 
@@ -82,6 +79,14 @@ public class ChatBot : MonoBehaviour {
 
         nextItem = Current != null;
         npcProfile.AddToHistory(Current);
+
+    }
+
+    void theyChatItem(string txt)
+    {
+        UITextFit utf = Instantiate(themUIPrefab);
+        utf.SetText(txt);
+        utf.transform.SetParent(chatRect);
 
     }
 
@@ -93,14 +98,30 @@ public class ChatBot : MonoBehaviour {
         if (Current.social != SocialDimension.Neutral)
         {
             playerProfile.UpdateValue(Current.social, Current.SelectedValue);
+            if (!npcProfile.UpdateInterestAndGetStayInChat(Current.social, Current.SelectedValue))
+            {
+                string txt = npcProfile.abandonMessage.GetOptionBasedOnSocialValue(npcProfile.GetValue(npcProfile.abandonMessage.social));
+                StartCoroutine(delayAbandon(txt));              
+                npcProfile = null;
+                Current = null;
+            }
         }
+    }
+
+    IEnumerator<WaitForSeconds> delayAbandon(string txt)
+    {
+        yield return new WaitForSeconds(1f);
+        theyChatItem(txt);
+        Debug.Log("NPC left conversation");
     }
 
     void showOptions()
     {
-        UITextFit utf;
+        //TODO: Test what options to show based on own psy profile
+
         for (int i=0; i<Current.OptionList.Length; i++)
         {
+            UITextFit utf;
             if (i < optionsRect.childCount)
             {
                 GameObject child = optionsRect.GetChild(i).gameObject;
@@ -138,8 +159,11 @@ public class ChatBot : MonoBehaviour {
         Current.SetIndex(btn.GetComponent<UITextFit>().Index);
         weChat();
 
-        Current = Current.NextChatItem();
-        npcProfile.AddToHistory(Current);
+        if (npcProfile)
+        {
+            Current = Current.NextChatItem();
+            npcProfile.AddToHistory(Current);
+        }
 
         if (Current != null)
         {

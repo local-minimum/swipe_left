@@ -2,7 +2,7 @@
 using System.Collections;
 
 public enum Actor {Player, NPC };
-public enum SocialDimension {Neutral, Maturity, Eagerness};
+public enum SocialDimension {Neutral, Maturity, Eagerness, Irony, Aggressive};
 public enum IndexDirection {Next, Previos};
 
 [CreateAssetMenu(fileName = "ChatItem", menuName = "Chat Item", order = 1)]
