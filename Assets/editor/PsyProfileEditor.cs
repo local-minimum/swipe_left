@@ -19,6 +19,13 @@ public class PsyProfileEditor : Editor {
         } else if (!myTarget.hasAllDimensions && GUILayout.Button("+ Add Missing Dimensions"))
         {
             myTarget.ExpandToAllDimension();
+        } else if (GUILayout.Button("Make featureless"))
+        {
+            for (int i = 1, l = myTarget.nDimensions + 1; i < l; i++)
+            {
+                SocialDimension sd = (SocialDimension)i;
+                myTarget.SetValue(sd, 0.5f);
+            }
         }
 
         string[] sdNames = System.Enum.GetNames(typeof(SocialDimension));

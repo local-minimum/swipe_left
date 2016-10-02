@@ -68,7 +68,10 @@ public class ChatBot : MonoBehaviour {
         UITextFit utf = Instantiate(themUIPrefab);
         float npcSocialValue = npcProfile.GetValue(Current.social);
         string txt = Current.GetOptionBasedOnSocialValue(npcSocialValue);
-        npcProfile.UpdateValue(Current.social, Current.SelectedValue);
+        if (Current.social != SocialDimension.Neutral)
+        {
+            npcProfile.UpdateValue(Current.social, Current.SelectedValue);
+        }
         utf.SetText(txt);
         utf.transform.SetParent(chatRect);
 
@@ -86,7 +89,11 @@ public class ChatBot : MonoBehaviour {
     {
         UITextFit utf = Instantiate(weUIPrefab);
         utf.transform.SetParent(chatRect);
-        utf.SetText(Current.SelectedOption);            
+        utf.SetText(Current.SelectedOption);
+        if (Current.social != SocialDimension.Neutral)
+        {
+            playerProfile.UpdateValue(Current.social, Current.SelectedValue);
+        }
     }
 
     void showOptions()
@@ -112,8 +119,8 @@ public class ChatBot : MonoBehaviour {
             }
             utf.SetText(i, Current.OptionList[i]);
 
-
         }
+
         for (int i=Current.OptionList.Length; i < optionsRect.childCount; i++)
         {
             GameObject child = optionsRect.GetChild(i).gameObject;
