@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "PychProfile", menuName = "Psychology Profile", order = 1)]
 public class PsychologyProfile : ScriptableObject {
@@ -10,16 +10,84 @@ public class PsychologyProfile : ScriptableObject {
     [SerializeField, Range(0, 1)]
     float maleability = 0.3f;
 
+    List<ChatItem> history = new List<ChatItem>();
+
+    public bool isSocial
+    {
+        get
+        {
+            return dimensionValues.Length > 0;
+        }
+    }
+
+    public bool hasAllDimensions
+    {
+        get
+        {
+            return System.Enum.GetValues(typeof(SocialDimension)).Length - 1 == dimensionValues.Length;
+        }
+    }
+
+    public void ExpandToAllDimension()
+    {
+        int l = System.Enum.GetValues(typeof(SocialDimension)).Length - 1;
+        float[] newDimValues = new float[l];
+        for (int i=0; i< l; i++)
+        {
+            newDimValues[i] = 0.5f;
+        }
+
+        System.Array.Copy(dimensionValues, newDimValues, Mathf.Min(newDimValues.Length, dimensionValues.Length));
+        dimensionValues = newDimValues;
+
+    }
+
+    public void AddToHistory(ChatItem item)
+    {
+        history.Add(item);
+    }
+
+    public int nDimensions
+    {
+        get
+        {
+            return dimensionValues.Length;
+        }
+       
+    }
+
     public float GetValue(SocialDimension dimension)
     {
-        int index = GetDimensionIndex(dimension);
+        int index = GetDimensionIndex(dimension);        
         if (index < 0 || index >= dimensionValues.Length)
         {
+            if (index > 0)
+            {
+                Debug.LogWarning(name + " has not set social value for " + dimension);
+            }
             return 0.5f;
         } else
         {
             return dimensionValues[index];
         }
+    }
+
+    public void SetValue(SocialDimension dimension, float value)
+    {
+        int index = GetDimensionIndex(dimension);
+        if (index < 0)
+        {
+            Debug.LogWarning("Can't set value for neutral dimension " + dimension);
+            return;
+        } else if (index >= dimensionValues.Length)
+        {
+            Debug.LogWarning("Can't set value for dimension because not included " + dimension);
+            return;
+        } else
+        {
+            dimensionValues[index] = value;
+        }
+
     }
 
     public void UpdateValue(SocialDimension dimension, float value)

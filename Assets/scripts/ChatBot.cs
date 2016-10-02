@@ -66,12 +66,19 @@ public class ChatBot : MonoBehaviour {
     {
         yield return new WaitForSeconds(Random.Range(minDelayNext, maxDelayNext));
         UITextFit utf = Instantiate(themUIPrefab);
-        utf.SetText(Current.SelectedOption);
+        float npcSocialValue = npcProfile.GetValue(Current.social);
+        string txt = Current.GetOptionBasedOnSocialValue(npcSocialValue);
+        utf.SetText(txt);
         utf.transform.SetParent(chatRect);
 
         yield return new WaitForSeconds(Random.Range(minDelayNext, maxDelayNext));
+
+
         Current = Current.NextChatItem();
+
         nextItem = Current != null;
+        npcProfile.AddToHistory(Current);
+
     }
 
     void weChat()
@@ -124,6 +131,8 @@ public class ChatBot : MonoBehaviour {
         weChat();
 
         Current = Current.NextChatItem();
+        npcProfile.AddToHistory(Current);
+
         if (Current != null)
         {
             StartCoroutine(DelayNext());
