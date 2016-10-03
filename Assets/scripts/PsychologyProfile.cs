@@ -16,10 +16,6 @@ public class PsychologyProfile : ScriptableObject {
     [Range(0, 1)]
     public float interest = 0.5f;
 
-    List<ChatItem> history = new List<ChatItem>();
-    
-    public ChatItem abandonMessage;
-
     public bool isSocial
     {
         get
@@ -48,11 +44,6 @@ public class PsychologyProfile : ScriptableObject {
         System.Array.Copy(dimensionValues, newDimValues, Mathf.Min(newDimValues.Length, dimensionValues.Length));
         dimensionValues = newDimValues;
 
-    }
-
-    public void AddToHistory(ChatItem item)
-    {
-        history.Add(item);
     }
 
     public int nDimensions

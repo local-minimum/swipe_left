@@ -1,12 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class ChatBot : MonoBehaviour {
-
-    List<ChatItem> history = new List<ChatItem>();
-
-    [SerializeField]
-    ChatItem Current;
+public class ChatBot : MonoBehaviour {    
 
     [SerializeField]
     Animator chatAnimator;
@@ -18,7 +13,7 @@ public class ChatBot : MonoBehaviour {
     PsychologyProfile playerProfile;
 
     [SerializeField]
-    PsychologyProfile npcProfile;
+    NPC npc;
 
     [SerializeField]
     UITextFit themUIPrefab;
@@ -46,12 +41,17 @@ public class ChatBot : MonoBehaviour {
 
     bool nextItem = true;
 
+    void Start()
+    {
+        npc.InitiateChat();
+    }
+
     void Update()
     {
         if (nextItem && Random.value < nextPollP)
         {
             nextItem = false;
-            if (Current.actor == Actor.NPC)
+            if (npc.Current.actor == Actor.NPC)
             {
                 StartCoroutine(theyChat());
             }
@@ -65,20 +65,20 @@ public class ChatBot : MonoBehaviour {
     IEnumerator<WaitForSeconds> theyChat()
     {
         yield return new WaitForSeconds(Random.Range(minDelayNext, maxDelayNext));
-        float npcSocialValue = npcProfile.GetValue(Current.social);
-        string txt = Current.GetOptionBasedOnSocialValue(npcSocialValue);
-        if (Current.social != SocialDimension.Neutral)
+        float npcSocialValue = npc.mind.GetValue(npc.Current.social);
+        string txt = npc.Current.GetOptionBasedOnSocialValue(npcSocialValue);
+        if (npc.Current.social != SocialDimension.Neutral)
         {
-            npcProfile.UpdateValue(Current.social, Current.SelectedValue);
+            npc.mind.UpdateValue(npc.Current.social, npc.Current.SelectedValue);
         }
         theyChatItem(txt);
         yield return new WaitForSeconds(Random.Range(minDelayNext, maxDelayNext));
 
 
-        Current = Current.NextChatItem();
+        npc.Current = npc.Current.NextChatItem();
 
-        nextItem = Current != null;
-        npcProfile.AddToHistory(Current);
+        nextItem = !npc.ChatHasEnded;
+        npc.AddToHistory(npc.Current);
 
     }
 
@@ -94,16 +94,15 @@ public class ChatBot : MonoBehaviour {
     {
         UITextFit utf = Instantiate(weUIPrefab);
         utf.transform.SetParent(chatRect);
-        utf.SetText(Current.SelectedOption);
-        if (Current.social != SocialDimension.Neutral)
+        utf.SetText(npc.Current.SelectedOption);
+        if (npc.Current.social != SocialDimension.Neutral)
         {
-            playerProfile.UpdateValue(Current.social, Current.SelectedValue);
-            if (!npcProfile.UpdateInterestAndGetStayInChat(Current.social, Current.SelectedValue))
+            playerProfile.UpdateValue(npc.Current.social, npc.Current.SelectedValue);
+            if (!npc.mind.UpdateInterestAndGetStayInChat(npc.Current.social, npc.Current.SelectedValue))
             {
-                string txt = npcProfile.abandonMessage.GetOptionBasedOnSocialValue(npcProfile.GetValue(npcProfile.abandonMessage.social));
-                StartCoroutine(delayAbandon(txt));              
-                npcProfile = null;
-                Current = null;
+                string txt = npc.abandonMessage.GetOptionBasedOnSocialValue(npc.mind.GetValue(npc.abandonMessage.social));
+                StartCoroutine(delayAbandon(txt));
+                npc.Current = npc.abandonMessage;
             }
         }
     }
@@ -119,7 +118,7 @@ public class ChatBot : MonoBehaviour {
     {
         //TODO: Test what options to show based on own psy profile
 
-        for (int i=0; i<Current.OptionList.Length; i++)
+        for (int i=0; i<npc.Current.OptionList.Length; i++)
         {
             UITextFit utf;
             if (i < optionsRect.childCount)
@@ -138,11 +137,11 @@ public class ChatBot : MonoBehaviour {
                 utf.transform.SetParent(optionsRect);
                 utf.GetComponent<UIButtonish>().OnClickAction += ChatBot_OnClickAction;
             }
-            utf.SetText(i, Current.OptionList[i]);
+            utf.SetText(i, npc.Current.OptionList[i]);
 
         }
 
-        for (int i=Current.OptionList.Length; i < optionsRect.childCount; i++)
+        for (int i=npc.Current.OptionList.Length; i < optionsRect.childCount; i++)
         {
             GameObject child = optionsRect.GetChild(i).gameObject;
             child.GetComponent<UIButtonish>().OnClickAction -= ChatBot_OnClickAction;
@@ -156,16 +155,16 @@ public class ChatBot : MonoBehaviour {
     {
 
         chatAnimator.SetTrigger(triggerHideOptions);
-        Current.SetIndex(btn.GetComponent<UITextFit>().Index);
+        npc.Current.SetIndex(btn.GetComponent<UITextFit>().Index);
         weChat();
 
-        if (npcProfile)
+        if (npc.mind)
         {
-            Current = Current.NextChatItem();
-            npcProfile.AddToHistory(Current);
+            npc.Current = npc.Current.NextChatItem();
+            npc.AddToHistory(npc.Current);
         }
 
-        if (Current != null)
+        if (!npc.ChatHasEnded)
         {
             StartCoroutine(DelayNext());
         }
