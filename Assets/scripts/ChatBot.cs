@@ -11,7 +11,7 @@ public class ChatBot : MonoBehaviour {
     string triggerHideOptions = "Hide";
 
     [SerializeField]
-    PsychologyProfile playerProfile;
+    Player player;
 
     [SerializeField]
     NPC npc;
@@ -125,7 +125,7 @@ public class ChatBot : MonoBehaviour {
         utf.SetText(npc.Current.SelectedOption);
         if (npc.Current.social != SocialDimension.Neutral)
         {
-            playerProfile.UpdateValue(npc.Current.social, npc.Current.SelectedValue);
+            player.mind.UpdateValue(npc.Current.social, npc.Current.SelectedValue);
             if (!npc.mind.UpdateInterestAndGetStayInChat(npc.Current.social, npc.Current.SelectedValue))
             {
                 string txt = npc.abandonMessage.GetOptionBasedOnSocialValue(npc.mind.GetValue(npc.abandonMessage.social));
