@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+[System.Serializable]
 public struct ChatHistoryItem
 {
     public string txt;
@@ -10,6 +11,14 @@ public struct ChatHistoryItem
     {
         this.actor = actor;
         this.txt = txt;
+    }
+
+    public bool Empty
+    {
+        get
+        {
+            return string.IsNullOrEmpty(txt);
+        }
     }
 }
 
@@ -58,6 +67,19 @@ public class NPC : ScriptableObject {
         }
     }
 
+    public int HistoryLength
+    {
+        get
+        {
+            return history.Count;
+        }
+    }
+
+    public ChatHistoryItem GetHistoryItem(int index)
+    {
+        return history[index];
+    }
+
     public bool ChatHasEnded
     {
         get
@@ -68,6 +90,7 @@ public class NPC : ScriptableObject {
 
     public void InitiateChat()
     {
+        history.Clear();
         Current = startMessage;
     }
 }

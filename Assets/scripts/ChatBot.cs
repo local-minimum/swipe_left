@@ -53,9 +53,36 @@ public class ChatBot : MonoBehaviour {
 
     void Start()
     {
-        npc.InitiateChat();
-        nameField.text = npc.UserName;
-        avatarImage.sprite = npc.Avatar;
+        if (npc)
+        {
+            ReplayHistory();
+            nameField.text = npc.UserName;
+            avatarImage.sprite = npc.Avatar;
+        }
+    }
+
+    void ReplayHistory()
+    {
+        int l = npc.HistoryLength;
+        for (int i = 0; i < l; i++) {
+            ChatHistoryItem item = npc.GetHistoryItem(i);
+            if (!item.Empty)
+            {
+                if (item.actor == Actor.NPC)
+                {
+                    theyChatItem(item.txt);
+                }
+                else if (item.actor == Actor.Player)
+                {
+                    weChatItem(item.txt);
+                }
+            }
+        }
+
+        if (npc.ChatHasEnded)
+        {
+            theyLeft();
+        }
     }
 
     void Update()
@@ -84,13 +111,13 @@ public class ChatBot : MonoBehaviour {
             npc.mind.UpdateValue(npc.Current.social, npc.Current.SelectedValue);
         }
         theyChatItem(txt);
-        yield return new WaitForSeconds(Random.Range(minDelayNext, maxDelayNext));
-
-
+        npc.AddToHistory(npc.Current);
         npc.Current = npc.Current.NextChatItem();
 
+        yield return new WaitForSeconds(Random.Range(minDelayNext, maxDelayNext));
+
         nextItem = !npc.ChatHasEnded;
-        npc.AddToHistory(npc.Current);
+        
         if (npc.ChatHasEnded)
         {
             yield return new WaitForSeconds(1f);
@@ -103,6 +130,7 @@ public class ChatBot : MonoBehaviour {
         UITextFit utf = Instantiate(statusPrefab);
         utf.FormatText(npc.UserName);
         utf.transform.SetParent(chatRect);
+        nextItem = false;
     }
 
     IEnumerator<WaitForSeconds> delayTheyLeft()
@@ -118,11 +146,17 @@ public class ChatBot : MonoBehaviour {
         utf.transform.SetParent(chatRect);
     }
 
-    void weChat()
+    void weChatItem(string txt)
     {
         UITextFit utf = Instantiate(weUIPrefab);
         utf.transform.SetParent(chatRect);
-        utf.SetText(npc.Current.SelectedOption);
+        utf.SetText(txt);
+    }
+
+    void weChat()
+    {
+        weChatItem(npc.Current.SelectedOption);
+
         if (npc.Current.social != SocialDimension.Neutral)
         {
             player.mind.UpdateValue(npc.Current.social, npc.Current.SelectedValue);
@@ -190,8 +224,8 @@ public class ChatBot : MonoBehaviour {
 
         if (npc.mind)
         {
-            npc.Current = npc.Current.NextChatItem();
             npc.AddToHistory(npc.Current);
+            npc.Current = npc.Current.NextChatItem();            
         }
 
         if (!npc.ChatHasEnded)
