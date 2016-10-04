@@ -29,6 +29,27 @@ public class NPC : ScriptableObject {
     
     public ChatItem Current;
 
+    public Sprite FullImage;
+
+    [SerializeField]
+    Sprite avatar;
+
+    public Sprite Avatar
+    {
+        get
+        {
+            if (avatar == null)
+            {
+                return FullImage;
+            } else
+            {
+                return avatar;
+            }
+        }
+    }
+
+    public string UserName;
+
     public void AddToHistory(ChatItem item)
     {
         if (item != null)

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class ChatBot : MonoBehaviour {    
 
@@ -41,9 +42,17 @@ public class ChatBot : MonoBehaviour {
 
     bool nextItem = true;
 
+    [SerializeField]
+    Text nameField;
+
+    [SerializeField]
+    Image avatarImage;
+
     void Start()
     {
         npc.InitiateChat();
+        nameField.text = npc.UserName;
+        avatarImage.sprite = npc.Avatar;
     }
 
     void Update()
