@@ -14,7 +14,7 @@ public struct ChatHistoryItem
 }
 
 
-[CreateAssetMenu(fileName = "NPC", menuName = "NPC", order = 1)]
+[CreateAssetMenu(fileName = "NPC", menuName = "Swipe Left/NPC", order = 1)]
 public class NPC : ScriptableObject {
 
     public PsychologyProfile mind;

@@ -5,7 +5,7 @@ public enum Actor {Player, NPC };
 public enum SocialDimension {Neutral, Maturity, Eagerness, Irony, Aggressive};
 public enum IndexDirection {Next, Previos};
 
-[CreateAssetMenu(fileName = "ChatItem", menuName = "Chat Item", order = 1)]
+[CreateAssetMenu(fileName = "ChatItem", menuName = "Swipe Left/Chat Item", order = 1)]
 public class ChatItem : ScriptableObject {
     public Actor actor;
 

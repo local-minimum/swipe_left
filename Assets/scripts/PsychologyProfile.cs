@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-[CreateAssetMenu(fileName = "PychProfile", menuName = "Psychology Profile", order = 1)]
+[CreateAssetMenu(fileName = "PychProfile", menuName = "Swipe Left/Psychology Profile", order = 1)]
 public class PsychologyProfile : ScriptableObject {
 
     [SerializeField, HideInInspector]

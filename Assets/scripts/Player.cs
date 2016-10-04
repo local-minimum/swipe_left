@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+[CreateAssetMenu(fileName = "Player", menuName = "Swipe Left/Player", order = 1)]
 public class Player : ScriptableObject {
 
     [SerializeField]
@@ -27,6 +28,7 @@ public class Player : ScriptableObject {
         }
 
     }
+
     public PsychologyProfile mind;
 
 }
