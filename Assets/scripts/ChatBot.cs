@@ -23,6 +23,9 @@ public class ChatBot : MonoBehaviour {
     UITextFit weUIPrefab;
 
     [SerializeField]
+    UITextFit statusPrefab;
+
+    [SerializeField]
     RectTransform chatRect;
 
     [SerializeField]
@@ -88,7 +91,18 @@ public class ChatBot : MonoBehaviour {
 
         nextItem = !npc.ChatHasEnded;
         npc.AddToHistory(npc.Current);
+        if (npc.ChatHasEnded)
+        {
+            yield return new WaitForSeconds(1f);
+            theyLeft();        
+        }
+    }
 
+    void theyLeft()
+    {
+        UITextFit utf = Instantiate(statusPrefab);
+        utf.FormatText(npc.UserName);
+        utf.transform.SetParent(chatRect);
     }
 
     void theyChatItem(string txt)
@@ -96,7 +110,6 @@ public class ChatBot : MonoBehaviour {
         UITextFit utf = Instantiate(themUIPrefab);
         utf.SetText(txt);
         utf.transform.SetParent(chatRect);
-
     }
 
     void weChat()
@@ -121,6 +134,8 @@ public class ChatBot : MonoBehaviour {
         yield return new WaitForSeconds(1f);
         theyChatItem(txt);
         Debug.Log("NPC left conversation");
+        yield return new WaitForSeconds(1f);
+        theyLeft();
     }
 
     void showOptions()

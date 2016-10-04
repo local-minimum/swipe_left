@@ -46,6 +46,13 @@ public class UITextFit : MonoBehaviour {
         UpdateSize();
     }
 
+    public void FormatText(string txt)
+    {
+        Text text = GetComponentInChildren<Text>();
+        text.text = string.Format(text.text, txt);
+        UpdateSize();
+    }
+         
     public int Index
     {
         get
