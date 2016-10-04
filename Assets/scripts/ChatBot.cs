@@ -105,6 +105,12 @@ public class ChatBot : MonoBehaviour {
         utf.transform.SetParent(chatRect);
     }
 
+    IEnumerator<WaitForSeconds> delayTheyLeft()
+    {
+        yield return new WaitForSeconds(1f);
+        theyLeft();
+    }
+
     void theyChatItem(string txt)
     {
         UITextFit utf = Instantiate(themUIPrefab);
@@ -191,6 +197,9 @@ public class ChatBot : MonoBehaviour {
         if (!npc.ChatHasEnded)
         {
             StartCoroutine(DelayNext());
+        } else
+        {
+            StartCoroutine(delayTheyLeft());
         }
     }
 
