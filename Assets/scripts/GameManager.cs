@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour {
     Game _game;
 
     [SerializeField]
+    Player _player;
+
+    [SerializeField]
     SwipeStage swipeMode;
 
     [SerializeField]
@@ -34,6 +37,11 @@ public class GameManager : MonoBehaviour {
     public Game game
     {
         get { return _game; }
+    }
+
+    public Player player
+    {
+        get { return _player; }
     }
 
     void Start()
