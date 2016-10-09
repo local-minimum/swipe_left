@@ -64,6 +64,7 @@ public class ChatBot : MonoBehaviour {
     void ReplayHistory()
     {
         int l = npc.HistoryLength;
+        Debug.Log(string.Format("{0} items in chat history", l));
         for (int i = 0; i < l; i++) {
             ChatHistoryItem item = npc.GetHistoryItem(i);
             if (!item.Empty)

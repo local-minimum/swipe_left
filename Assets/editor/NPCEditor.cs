@@ -9,8 +9,10 @@ public class NPCEditor : Editor {
 
         if (GUILayout.Button("Restart"))
         {
+            
             NPC myTaget = target as NPC;
             myTaget.InitiateChat();
+            EditorUtility.SetDirty(myTaget);
         }
     }
 }

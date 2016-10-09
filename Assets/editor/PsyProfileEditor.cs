@@ -11,6 +11,8 @@ public class PsyProfileEditor : Editor {
 
         PsychologyProfile myTarget = target as PsychologyProfile;
 
+        EditorGUI.BeginChangeCheck();
+
         if (!myTarget.isSocial) {
             if (GUILayout.Button("+ Make Social"))
             {
@@ -38,8 +40,12 @@ public class PsyProfileEditor : Editor {
             if (val != newVal)
             {
                 myTarget.SetValue(sd, newVal);
-            }
-            
+            }            
+        }
+
+        if (EditorGUI.EndChangeCheck())
+        {
+            EditorUtility.SetDirty(target);
         }
     }
 }

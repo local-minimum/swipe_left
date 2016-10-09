@@ -11,7 +11,13 @@ public class TransAnimEditor : Editor {
 
         if (GUILayout.Button("Test"))
         {
-            (target as TransparencyAnim).Anim();
+            if (Application.isPlaying)
+            {
+                (target as TransparencyAnim).Anim();
+            } else
+            {
+                Debug.LogError("Needs to be in playmode to animate");
+            }
         }
     }
 }

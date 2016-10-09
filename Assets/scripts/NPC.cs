@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+
 [System.Serializable]
 public struct ChatHistoryItem
 {
@@ -92,5 +93,6 @@ public class NPC : ScriptableObject {
     {
         history.Clear();
         Current = startMessage;
+        
     }
 }
