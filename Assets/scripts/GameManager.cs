@@ -31,6 +31,10 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     int setSize = 4;
 
+    public int SetSize
+    {
+        get { return setSize; }
+    }
     [SerializeField]
     float timeBetweenSets = 4f * 60f;
 
@@ -69,6 +73,7 @@ public class GameManager : MonoBehaviour {
 
     public void ReturnToPreviousState()
     {
+        Debug.Log("Mode revert to " + _previousState);
         SetGameState(_previousState);
         _previousState = GameStates.Dates;   
     }
@@ -143,5 +148,5 @@ public class GameManager : MonoBehaviour {
             yield return new WaitForSeconds(Random.Range(timeBetweenSets, timeBetweenSets + timeBeweensVar));
         }
     }
-
+    
 }
