@@ -28,6 +28,14 @@ public class SwipeStage : MonoBehaviour {
     [SerializeField, Range(0, 1)]
     float swapDelay2 = 0.3f;
 
+    public bool hasSet
+    {
+        get
+        {
+            return remainingInSet > 0;
+        }
+    }
+
     NPC npc;
 
     void Awake()
@@ -63,6 +71,7 @@ public class SwipeStage : MonoBehaviour {
                 StartCoroutine(DisplayNextInQueue());
             } else
             {
+                remainingInSet = 0;
                 gameManager.SetGameState(GameStates.Chat);
             }
         }
