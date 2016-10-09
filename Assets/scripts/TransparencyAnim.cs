@@ -34,7 +34,7 @@ public class TransparencyAnim : MonoBehaviour {
     IEnumerator<WaitForSeconds> anim()
     {
         float startTime = Time.timeSinceLevelLoad;
-        Debug.Log("Start");
+        
         while (true)
         {
             float progress = Mathf.Clamp01((Time.timeSinceLevelLoad - startTime) / duration);
@@ -50,6 +50,6 @@ public class TransparencyAnim : MonoBehaviour {
                 break;
             }            
         }
-        Debug.Log("End");
+        
     }
 }
