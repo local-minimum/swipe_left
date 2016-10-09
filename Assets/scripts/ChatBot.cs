@@ -88,7 +88,7 @@ public class ChatBot : MonoBehaviour {
 
     void Update()
     {
-        if (nextItem && Random.value < nextPollP)
+        if (nextItem && npc != null && Random.value < nextPollP)
         {
             nextItem = false;
             if (npc.Current.actor == Actor.NPC)

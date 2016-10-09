@@ -13,6 +13,18 @@ public class TransparencyAnim : MonoBehaviour {
     [SerializeField]
     Image img;
 
+    [SerializeField]
+    GameManager gm;
+
+    void OnEnable()
+    {
+        gm.OnNewNPCSet += Anim;
+    }
+
+    void OnDisable()
+    {
+        gm.OnNewNPCSet -= Anim;
+    }
 
     public void Anim()
     {

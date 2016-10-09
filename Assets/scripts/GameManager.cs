@@ -3,6 +3,16 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
 
+    public static GameManager instance
+    {
+        get 
+        {
+            return FindObjectOfType<GameManager>();
+        }
+    }
+
+    public event System.Action OnNewNPCSet;
+
     [SerializeField]
     Game _game;
 
@@ -17,6 +27,9 @@ public class GameManager : MonoBehaviour {
 
     [SerializeField]
     float timeBetweenSets = 4f * 60f;
+
+    [SerializeField]
+    float timeBeweensVar = 60f;
 
     public Game game
     {
@@ -66,11 +79,12 @@ public class GameManager : MonoBehaviour {
             int c = _game.remainingNPCs.Count;
             if (c == 0)
             {
-                //TODO: Download more?
+                Debug.Log("No more NPCs to make set from");
                 break;
             }
             if (!swipeMode.hasSet)
             {
+                Debug.Log("New set");
                 if (c > 2 * setSize) {
                     swipeMode.remainingInSet = setSize;
                 } else if (c > setSize)
@@ -79,10 +93,18 @@ public class GameManager : MonoBehaviour {
                 } else
                 {
                     swipeMode.remainingInSet = c;
+                    Debug.Log("Last NPC set");
                 }
-                //TODO: Signal new set created
+                if (OnNewNPCSet != null)
+                {
+                    OnNewNPCSet();
+                }
+                
+            } else
+            {
+                Debug.Log("Player has yet to look at current set");
             }
-            yield return new WaitForSeconds(Random.Range(timeBetweenSets, timeBetweenSets + 60f));
+            yield return new WaitForSeconds(Random.Range(timeBetweenSets, timeBetweenSets + timeBeweensVar));
         }
     }
 
