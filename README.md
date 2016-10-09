@@ -1,4 +1,4 @@
-# __ Swip left __
+# __ Swipe left __
 
 A dating-sim for those liking household appliances
 
