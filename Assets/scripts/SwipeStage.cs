@@ -72,7 +72,7 @@ public class SwipeStage : MonoBehaviour {
             } else
             {
                 remainingInSet = 0;
-                gameManager.SetGameState(GameStates.Chat);
+                gameManager.ReturnToPreviousState();
             }
         }
     }

@@ -26,6 +26,9 @@ public class GameManager : MonoBehaviour {
     Canvas chatMode;
 
     [SerializeField]
+    DatesManager _datesManager;
+
+    [SerializeField]
     int setSize = 4;
 
     [SerializeField]
@@ -61,8 +64,17 @@ public class GameManager : MonoBehaviour {
         SetGameState();
         StartCoroutine(SetCreator());
     }
-    
+
+    GameStates _previousState = GameStates.Dates;
+
+    public void ReturnToPreviousState()
+    {
+        SetGameState(_previousState);
+        _previousState = GameStates.Dates;   
+    }
+
     public void SetGameState(GameStates state) {
+        _previousState = _game.gameState;
         _game.gameState = state;
         SetGameState();
     }
@@ -73,10 +85,12 @@ public class GameManager : MonoBehaviour {
         {
             chatMode.gameObject.SetActive(true);
             swipeMode.gameObject.SetActive(false);
+            _datesManager.gameObject.SetActive(false);
         } else if (_game.gameState == GameStates.Swiping)
         {
             chatMode.gameObject.SetActive(false);
             swipeMode.gameObject.SetActive(true);
+            _datesManager.gameObject.SetActive(false);
 
             swipeMode.TestIfNext();
 
@@ -84,6 +98,12 @@ public class GameManager : MonoBehaviour {
         {
             chatMode.gameObject.SetActive(false);
             swipeMode.gameObject.SetActive(false);
+            _datesManager.gameObject.SetActive(false);
+        } else if (_game.gameState == GameStates.Dates)
+        {
+            chatMode.gameObject.SetActive(false);
+            swipeMode.gameObject.SetActive(false);
+            _datesManager.gameObject.SetActive(true);
         }
     }
 

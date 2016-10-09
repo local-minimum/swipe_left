@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public enum GameStates {Intro, Swiping, Chat };
+public enum GameStates {Intro, Swiping, Chat, Dates};
 
 [CreateAssetMenu(fileName = "Game", menuName = "Swipe Left/Game", order = 1)]
 public class Game : ScriptableObject {
