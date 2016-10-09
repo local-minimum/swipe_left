@@ -11,7 +11,7 @@ public class NPCEditor : Editor {
         {
             
             NPC myTaget = target as NPC;
-            myTaget.InitiateChat();
+            myTaget.ResetChat();
             EditorUtility.SetDirty(myTaget);
         }
     }

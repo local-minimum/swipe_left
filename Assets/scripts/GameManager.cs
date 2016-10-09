@@ -14,6 +14,11 @@ public class GameManager : MonoBehaviour {
 
     void Start()
     {
+        if (!game.loaded)
+        {
+            game.LoadNewGame();
+        }
+
         if (game.gameState == GameStates.Chat)
         {
             chatMode.gameObject.SetActive(true);

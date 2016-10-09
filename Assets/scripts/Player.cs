@@ -23,7 +23,7 @@ public class Player : ScriptableObject {
         } else
         {
             friends.Add(friend);
-            friend.InitiateChat();
+            friend.ResetChat();
             return true;
         }
 

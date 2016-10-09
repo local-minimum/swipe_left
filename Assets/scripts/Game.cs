@@ -10,7 +10,11 @@ public class Game : ScriptableObject {
 
     public Player player;
 
+    [HideInInspector]
     public List<NPC> remainingNPCs = new List<NPC>();
+
+    [SerializeField]
+    bool _loaded = false;
 
     public NPC PopRandomNPC()
     {
@@ -23,5 +27,28 @@ public class Game : ScriptableObject {
         NPC npc = remainingNPCs[Random.Range(0, remainingNPCs.Count)];
         remainingNPCs.Remove(npc);
         return npc;
+    }
+
+    public bool loaded
+    {
+        get
+        {
+            return _loaded;
+        }
+    }
+
+    public void LoadNewGame()
+    {
+        Debug.Log("Setting up initial game");
+        remainingNPCs.Clear();
+        remainingNPCs.AddRange(Resources.LoadAll<NPC>("characters"));
+
+        foreach (NPC npc in remainingNPCs)
+        {
+            npc.ResetChat();
+        }
+
+        _loaded = true;
+        Debug.Log(string.Format("{0} NPCs loaded", remainingNPCs.Count));
     }    
 }

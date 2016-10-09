@@ -89,7 +89,7 @@ public class NPC : ScriptableObject {
         }
     }
 
-    public void InitiateChat()
+    public void ResetChat()
     {
         history.Clear();
         Current = startMessage;
