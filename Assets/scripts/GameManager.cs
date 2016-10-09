@@ -4,7 +4,7 @@ using System.Collections;
 public class GameManager : MonoBehaviour {
 
     [SerializeField]
-    Game game;
+    Game _game;
 
     [SerializeField]
     Canvas swipeMode;
@@ -12,21 +12,42 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     Canvas chatMode;
 
+    public Game game
+    {
+        get { return _game; }
+    }
+
     void Start()
     {
-        if (!game.loaded)
+        if (!_game.loaded)
         {
-            game.LoadNewGame();
+            _game.LoadNewGame();
         }
+        SetGameState();
+    }
+    
+    public void SetGameState(GameStates state) {
+        _game.gameState = state;
+        SetGameState();
+    }
 
-        if (game.gameState == GameStates.Chat)
+    public void SetGameState()
+    {
+        if (_game.gameState == GameStates.Chat)
         {
             chatMode.gameObject.SetActive(true);
             swipeMode.gameObject.SetActive(false);
-        } else if (game.gameState == GameStates.Swiping)
+        } else if (_game.gameState == GameStates.Swiping)
         {
             chatMode.gameObject.SetActive(false);
             swipeMode.gameObject.SetActive(true);
+
+            swipeMode.GetComponent<SwipeStage>().TestIfNext();
+
+        } else if (_game.gameState == GameStates.Intro)
+        {
+            chatMode.gameObject.SetActive(false);
+            swipeMode.gameObject.SetActive(false);
         }
     }
 

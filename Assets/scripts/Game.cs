@@ -20,7 +20,7 @@ public class Game : ScriptableObject {
     {
         if (remainingNPCs.Count == 0)
         {
-            Debug.Log("Game Over?");
+            Debug.Log("Out of NPCs");
             return null;
         }
 
@@ -48,6 +48,7 @@ public class Game : ScriptableObject {
             npc.ResetChat();
         }
 
+        gameState = GameStates.Intro;
         _loaded = true;
         Debug.Log(string.Format("{0} NPCs loaded", remainingNPCs.Count));
     }    

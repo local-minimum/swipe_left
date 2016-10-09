@@ -11,12 +11,9 @@ public class SwipeStage : MonoBehaviour {
     Image CurrentPhoto;
 
     [SerializeField]
-    Sprite[] UserPhotos;
+    GameManager gameManager;
 
-    [SerializeField]
-    string[] UserNames;
-
-    int showingIndex = -1;
+    public int remainingInSet = 4;
 
     string triggerVoteLike = "VoteLove";
     string triggerVoteHate = "VoteHate";
@@ -31,15 +28,16 @@ public class SwipeStage : MonoBehaviour {
     [SerializeField, Range(0, 1)]
     float swapDelay2 = 0.3f;
 
-    void Start()
+    NPC npc;
+
+    void Awake()
     {
         anim = GetComponent<Animator>();
-        StartCoroutine(DisplayNextInQueue());
     }
 
     void OnEnable()
     {
-        GetComponentInChildren<swiper>().OnSwipeVote += SwipeStage_OnSwipeVote;
+        GetComponentInChildren<swiper>().OnSwipeVote += SwipeStage_OnSwipeVote;        
     }
 
     void OnDisable()
@@ -50,19 +48,37 @@ public class SwipeStage : MonoBehaviour {
     private void SwipeStage_OnSwipeVote(bool liked)
     {
         anim.SetTrigger(liked ? triggerVoteLike : triggerVoteHate);
-        StartCoroutine(DisplayNextInQueue());
+        TestIfNext();
+    }
+
+    public void TestIfNext()
+    {
+
+        if (remainingInSet > 0)
+        {
+            npc = gameManager.game.PopRandomNPC();
+            remainingInSet--;
+            if (npc != null)
+            {
+                StartCoroutine(DisplayNextInQueue());
+            } else
+            {
+                gameManager.SetGameState(GameStates.Chat);
+            }
+        }
     }
 
     IEnumerator<WaitForSeconds> DisplayNextInQueue()
-    {     
-        showingIndex++;
+    {
+
+        
         anim.ResetTrigger(triggerVoting);
         yield return new WaitForSeconds(swapDelay);
-        //TODO: This should not be in the future
-        showingIndex %= UserNames.Length;
 
-        CurrentUserName.text = UserNames[showingIndex];
-        CurrentPhoto.sprite = UserPhotos[showingIndex];
+
+        CurrentUserName.text = npc.UserName;
+        CurrentPhoto.sprite = npc.FullImage;
+
         yield return new WaitForSeconds(swapDelay2);
 
         anim.ResetTrigger(triggerAbortVoting);

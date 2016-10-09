@@ -80,7 +80,10 @@ public class swiper : MonoBehaviour {
     {
         hovering = false;        
         likeLevel = 0.5f;
-        anim.SetFloat(triggerLikeLevel, likeLevel);
+        if (anim.isInitialized)
+        {
+            anim.SetFloat(triggerLikeLevel, likeLevel);
+        }
         swiping = false;
         Cursor.visible = true;
         SetDragMarker(0.5f);
