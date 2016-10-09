@@ -34,6 +34,14 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     float timeBeweensVar = 60f;
 
+    public SwipeStage swipeBrowseManager
+    {
+        get
+        {
+            return swipeMode;
+        }
+    }
+
     public Game game
     {
         get { return _game; }
