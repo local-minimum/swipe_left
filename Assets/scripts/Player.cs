@@ -29,6 +29,13 @@ public class Player : ScriptableObject {
 
     }
 
+    public bool HasFriends
+    {
+        get
+        {
+            return friends.Count > 0;
+        }
+    }
     public PsychologyProfile mind;
 
 }

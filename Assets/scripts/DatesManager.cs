@@ -10,14 +10,36 @@ public class DatesManager : MonoBehaviour {
 
     [SerializeField]
     Button browse;
-	
-	void Update () {
+
+    [SerializeField]
+    Text noDate;
+
+    void Update() {
         //TODO: Wasteful
-        browse.interactable = gm.swipeBrowseManager.hasSet;	
-	}
+        browse.interactable = gm.swipeBrowseManager.hasSet;
+    }
+
+    void Start()
+    {
+        SetStatus();
+    }
 
     public void ClickBrowse()
     {
         gm.SetGameState(GameStates.Swiping);
+    }
+
+    void OnEnable() {
+        gm.OnGameLoaded += SetStatus;
+    }
+
+    void OnDisable()
+    {
+        gm.OnGameLoaded -= SetStatus;
+    }
+
+    void SetStatus()
+    {
+        noDate.enabled = !gm.player.HasFriends;
     }
 }

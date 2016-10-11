@@ -11,7 +11,7 @@ public class TransparencyAnim : MonoBehaviour {
     AnimationCurve curve;
 
     [SerializeField]
-    Image img;
+    Graphic img;
 
     [SerializeField]
     GameManager gm;
@@ -49,6 +49,7 @@ public class TransparencyAnim : MonoBehaviour {
             {
                 break;
             }            
+            
         }
         
     }

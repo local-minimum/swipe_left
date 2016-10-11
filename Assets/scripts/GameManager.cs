@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public event System.Action OnNewNPCSet;
+    public event System.Action OnGameLoaded;
 
     [SerializeField]
     Game _game;
@@ -35,6 +36,7 @@ public class GameManager : MonoBehaviour {
     {
         get { return setSize; }
     }
+
     [SerializeField]
     float timeBetweenSets = 4f * 60f;
 
@@ -67,6 +69,10 @@ public class GameManager : MonoBehaviour {
         }
         SetGameState();
         StartCoroutine(SetCreator());
+        if (OnGameLoaded != null)
+        {
+            OnGameLoaded();
+        }
     }
 
     GameStates _previousState = GameStates.Dates;
